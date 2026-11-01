@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="2400" viewBox="0 0 1200 2400">
+  <rect width="1200" height="2400" fill="#211d49"/>
+  <rect x="260" y="730" width="680" height="680" rx="150" fill="#fff8e1" stroke="#ffd93d" stroke-width="18"/>
+  <image href="/app-icon.svg" x="350" y="820" width="500" height="500" preserveAspectRatio="xMidYMid meet"/>
+  <text x="600" y="1570" fill="#fff8e1" font-family="Arial,sans-serif" font-size="80" font-weight="800" text-anchor="middle">PROJECT AEGIS</text>
+  <text x="600" y="1660" fill="#ffd93d" font-family="Arial,sans-serif" font-size="36" text-anchor="middle">RESEARCH PROTOTYPE · NOT AN OFFICIAL ALERT</text>
+</svg>

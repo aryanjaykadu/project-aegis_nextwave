@@ -1,0 +1,30 @@
+{
+  "prepared_at_utc": "2026-10-31T14:11:01.389002+00:00",
+  "weather_source": "Open-Meteo Historical Weather Archive API and Flood API",
+  "weather_urls": [
+    "https://archive-api.open-meteo.com/v1/archive",
+    "https://flood-api.open-meteo.com/v1/flood"
+  ],
+  "weather_location": {
+    "name": "Patna, Bihar, India",
+    "latitude": 25.5941,
+    "longitude": 85.1376
+  },
+  "weather_period": {
+    "start": "2015-01-01",
+    "end": "2023-12-31"
+  },
+  "weather_variables": [
+    "daily precipitation sum (mm)",
+    "daily soil moisture (0\u20137 cm, m\u00b3/m\u00b3)",
+    "daily river discharge (m\u00b3/s)"
+  ],
+  "event_source": "India Flood Inventory v3, IIT Delhi HydroSense Lab, Zenodo record 16994648 (v4 record; event file v3)",
+  "event_doi": "10.5281/zenodo.16994648",
+  "event_file": "india_flood_inventory_v3.csv",
+  "event_license": "Dataset record does not expose a clear license field; cite the source and review terms before redistribution or commercial reuse.",
+  "event_filter": "Events whose State contains Bihar and Districts lists Patna; event dates parsed as day-month-year.",
+  "patna_events_in_inventory": 14,
+  "label_caveat": "Inventory positives are documented historical events. An unlisted date is not proof of no flood. Sparse labels and one weather grid point make this an exploratory research dataset, not an operational forecast dataset.",
+  "prepared_rows": 3287
+}

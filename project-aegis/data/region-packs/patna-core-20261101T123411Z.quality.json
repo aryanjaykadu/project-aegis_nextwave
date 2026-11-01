@@ -1,0 +1,33 @@
+{
+  "region_id": "patna-core",
+  "version": "20261101T123411Z",
+  "created_at": "2026-11-01T12:34:11.351097+00:00",
+  "bounds": {
+    "south": 25.55,
+    "west": 85.08,
+    "north": 25.64,
+    "east": 85.2
+  },
+  "source": "OpenStreetMap via Overpass",
+  "source_url": "https://www.openstreetmap.org/",
+  "attribution": "© OpenStreetMap contributors · ODbL",
+  "license": "ODbL",
+  "license_url": "https://www.openstreetmap.org/copyright",
+  "trust_tier": {
+    "code": "B",
+    "label": "Map data",
+    "notice": "OpenStreetMap listing; may be outdated. Verify before relying on it."
+  },
+  "notice": "Community map data may be incomplete or outdated. Facility availability is not verified.",
+  "feature_count": 1065,
+  "quality": {
+    "raw_elements": 1073,
+    "accepted_features": 1065,
+    "duplicates_merged": 0,
+    "invalid_coordinates_or_ids": 8,
+    "missing_names": 421,
+    "missing_names_percent": 39.53,
+    "missing_edit_timestamps": 1065,
+    "missing_edit_timestamps_percent": 100.0
+  }
+}

@@ -1,0 +1,12 @@
+fastapi
+uvicorn
+requests
+pandas
+scikit-learn
+joblib
+twilio
+playwright
+python-dotenv
+pyarrow
+httpx
+pytest

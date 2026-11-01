@@ -1,0 +1,10 @@
+# Secrets and local runtime data
+.env
+.env.*
+!.env.example
+data/aegis.db
+*.log
+__pycache__/
+*.py[cod]
+.venv/
+.uv-python/

@@ -1,0 +1,830 @@
+#aegis-offline-banner{position:fixed;z-index:6100;top:calc(env(safe-area-inset-top) + 6px);left:50%;transform:translateX(-50%);width:max-content;max-width:calc(100vw - 24px);padding:8px 14px;border:2px solid var(--ink,#14112e);border-radius:999px;background:#fff0bd;color:#14112e;font:800 14px/1.3 var(--font-body,Nunito,sans-serif);box-shadow:2px 3px 0 var(--ink,#14112e)}
+#aegis-offline-banner[hidden]{display:none}
+#aegis-map-credits{position:fixed;z-index:520;left:8px;bottom:calc(env(safe-area-inset-bottom) + 8px);padding:5px 9px;border:1px solid #444;border-radius:12px;background:rgba(255,255,255,.94);color:#14112e;font:700 11px/1.25 system-ui,sans-serif}
+#aegis-map-credits a{color:#14112e;text-decoration:underline}
+.leaflet-control-attribution{margin-bottom:calc(env(safe-area-inset-bottom) + 5px)!important;margin-right:8px!important;max-width:min(65vw,420px);white-space:normal!important;background:rgba(255,255,255,.94)!important;color:#14112e!important}
+#aegis-map-actions{position:fixed;z-index:520;right:12px;top:calc(env(safe-area-inset-top) + 150px);display:grid;gap:8px}
+#aegis-map-actions button,.aegis-utility-button{min-width:48px;min-height:48px;border:2px solid #14112e;border-radius:18px;background:#fff8e1;color:#14112e;box-shadow:2px 3px 0 #14112e;font:900 16px/1 var(--font-body,Nunito,sans-serif)}
+#aegis-emergency-open{position:fixed;z-index:6200;right:12px;top:calc(env(safe-area-inset-top) + 12px);min-height:52px;padding:8px 14px;border:3px solid #14112e;border-radius:18px;background:#ff4d4d;color:#14112e;box-shadow:3px 4px 0 #14112e;font:900 17px/1 var(--font-body,Nunito,sans-serif)}
+.aegis-overlay{position:fixed;inset:0;z-index:9000;display:none;align-items:flex-end;justify-content:center;padding:12px;padding-bottom:max(12px,env(safe-area-inset-bottom));background:rgba(20,17,46,.5)}
+.aegis-overlay[aria-hidden="false"]{display:flex}
+.aegis-panel{width:min(720px,100%);max-height:92dvh;overflow:auto;padding:20px;border:3px solid #14112e;border-radius:28px;background:#fff8e1;color:#14112e;box-shadow:5px 6px 0 #14112e;font:700 16px/1.5 var(--font-body,Nunito,sans-serif)}
+.aegis-panel h2{margin:0 0 12px;font:38px/1 Bangers,Impact,cursive}
+.aegis-panel button,.aegis-panel input,.aegis-panel select,.aegis-panel textarea{font:inherit;font-size:16px}
+.aegis-panel button,.aegis-panel a.aegis-action{display:inline-flex;min-height:52px;align-items:center;justify-content:center;padding:10px 16px;border:2px solid #14112e;border-radius:18px;background:#ffd93d;color:#14112e;box-shadow:2px 3px 0 #14112e;text-decoration:none;font-weight:900}
+.aegis-emergency-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.aegis-emergency-grid>*{min-height:76px!important;font-size:20px!important}
+.aegis-panel label{display:grid;gap:5px;margin:9px 0}
+.aegis-panel input,.aegis-panel select,.aegis-panel textarea{width:100%;min-height:48px;padding:9px;border:2px solid #14112e;border-radius:14px;background:white;color:#14112e}
+.aegis-panel .aegis-secondary{background:white}
+.aegis-actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:12px}
+.aegis-recent{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px;padding:4px}
+.aegis-recent[hidden]{display:none!important}
+.aegis-recent button{min-height:44px;padding:7px 12px;border:2px solid #14112e;border-radius:16px;background:white;color:#14112e;font:800 14px/1.25 var(--font-body,Nunito,sans-serif);box-shadow:2px 3px 0 #14112e}
+.aegis-search-clear{min-width:48px;min-height:48px;border:0;border-left:2px solid #14112e;background:white;color:#14112e;font-size:22px;font-weight:900}
+.aegis-search-clear[hidden]{display:none}
+.aegis-place-choice{display:block;width:100%;margin:7px 0;text-align:left!important}
+.aegis-time{cursor:help;text-decoration:underline dotted}
+.aegis-expired-report{opacity:.62;filter:grayscale(.45)}
+.aegis-unverified{display:inline-flex;gap:5px;align-items:center;padding:3px 8px;border:2px dashed #14112e;border-radius:99px;background:#fff0bd;color:#14112e;font-weight:900}
+html[data-text-size="large"]{font-size:125%}
+html[data-text-size="largest"]{font-size:150%}
+html[data-contrast="high"] .aegis-panel,html[data-contrast="high"] #aegis-offline-banner{border-width:4px;box-shadow:3px 4px 0 #000}
+@media(max-width:600px){#aegis-map-actions{right:10px;top:calc(env(safe-area-inset-top) + 145px)}.aegis-overlay{padding:0;align-items:flex-end}.aegis-panel{max-height:94dvh;border-radius:28px 28px 0 0;padding:18px 16px calc(18px + env(safe-area-inset-bottom))}#aegis-map-credits{bottom:calc(env(safe-area-inset-bottom) + 7px);max-width:56vw}.leaflet-control-attribution{max-width:42vw!important;font-size:9px!important}}
+@media(max-width:360px){#aegis-emergency-open{right:7px;top:calc(env(safe-area-inset-top) + 7px);min-height:46px;padding:6px 9px;font-size:14px}.aegis-panel{padding-inline:13px}.aegis-emergency-grid{grid-template-columns:1fr}}
+@media(prefers-reduced-motion:reduce){.aegis-overlay{transition:opacity .12s linear!important}.aegis-overlay *{animation:none!important;scroll-behavior:auto!important}}
+.search-input{font-size:16px!important;min-height:48px;min-width:0;text-overflow:ellipsis}
+.search-container{z-index:1200!important}
+.aegis-recent{position:relative;z-index:1201;max-width:100%;padding:8px;border:2px solid #14112e;border-radius:16px;background:#fff8e1;box-shadow:2px 3px 0 #14112e}
+.search-input-wrapper{align-items:center}
+.aegis-search-clear{flex:0 0 48px;padding:0}
+.search-result-item{min-height:48px;font-size:15px}
+.leaflet-bottom{bottom:var(--aegis-map-safe-bottom,0px)!important;z-index:1101!important}
+.leaflet-control-attribution,.leaflet-control-scale{z-index:1101!important}
+#aegis-map-actions{top:auto;bottom:calc(var(--aegis-map-controls-bottom,32vh) + env(safe-area-inset-bottom))}
+#risk-summary{max-height:none!important;overflow:visible!important}
+.risk-summary-meta{display:flex;flex-wrap:wrap;gap:6px 12px}
+.risk-summary-meta>*{max-width:100%;overflow-wrap:anywhere}
+.layer-chip{max-width:calc(100vw - 32px);white-space:normal;overflow-wrap:anywhere}
+.language-picker{padding-right:22px!important;min-width:76px;max-width:calc(100vw - 32px);font-size:12px!important}
+.aegis-map-menu{display:grid;grid-template-columns:1fr 1fr;gap:7px;min-width:220px}
+.aegis-map-menu button{min-height:44px;padding:7px;border:2px solid #14112e;border-radius:12px;background:#fff8e1;color:#14112e;font:800 14px/1.2 var(--font-body,Nunito,sans-serif)}
+.aegis-update-toast{position:fixed;z-index:9200;left:50%;bottom:calc(18px + env(safe-area-inset-bottom));transform:translateX(-50%);display:flex;align-items:center;gap:12px;max-width:calc(100vw - 24px);padding:10px 14px;border:2px solid #14112e;border-radius:18px;background:#fff8e1;color:#14112e;box-shadow:3px 4px 0 #14112e;font:800 15px/1.3 var(--font-body,Nunito,sans-serif)}
+.aegis-update-toast button{min-height:44px;padding:6px 12px;border:2px solid #14112e;border-radius:14px;background:#ffd93d;color:#14112e;font:900 15px var(--font-body,Nunito,sans-serif)}
+#risk-value,#risk-badge,[data-glossary]{position:relative}
+#risk-badge::before{content:"◆ ";font-size:.8em}
+.aegis-expired-report{border-left:5px dashed #14112e;padding-left:9px}
+.aegis-unverified::before{content:"⚠ ";font-family:system-ui,sans-serif}
+.aegis-background-paused *{animation-play-state:paused!important}
+.aegis-overlay-open{overflow:hidden}
+@media(max-width:420px){#aegis-map-credits{font-size:10px;padding:4px 6px}#aegis-map-credits button{font-size:10px}.ops-heading{gap:4px}}
+@media(min-width:421px){.aegis-overlay{align-items:center}.aegis-panel{max-height:88vh}}
+html[data-text-size="largest"]{font-size:200%}
+.aegis-meter>span{background-color:#2de2c4!important;background-image:repeating-linear-gradient(135deg,rgba(20,17,46,.65) 0 3px,transparent 3px 7px)!important}
+.status-pill::before{content:"◆ ";font-family:system-ui,sans-serif}
+.aegis-source-fresh::before{content:"✓ ";font-weight:900}
+.aegis-source-stale::before,.aegis-source-missing::before{content:"⚠ ";font-weight:900}
+
+/* Map-first estimate dock: the original estimate nodes remain in place and keep their IDs. */
+#estimate-dock{position:fixed;z-index:1110;left:12px;bottom:var(--estimate-dock-bottom,222px);width:min(200px,calc(100vw - 190px));padding:6px;transition:transform .28s cubic-bezier(.2,.8,.2,1),opacity .2s ease;transform-origin:bottom left;pointer-events:none}
+.estimate-dock-controls{display:flex;align-items:center;gap:6px;max-width:100%;pointer-events:auto}
+.estimate-dock-toggle,.estimate-dock-scan{position:relative;display:inline-flex;min-height:48px;align-items:center;justify-content:center;gap:7px;border:2px solid var(--ink,#14112e);border-radius:999px;background:var(--cream,#fff8e1);color:var(--ink,#14112e);box-shadow:2px 3px 0 var(--ink,#14112e);font:900 clamp(12px,.875rem,20px)/1.1 var(--font-body,Nunito,sans-serif);white-space:nowrap}
+.estimate-dock-toggle{min-width:0;flex:1;padding:5px 12px}
+.estimate-dock-toggle svg{width:21px;height:21px;flex:0 0 21px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.estimate-dock-label{font:clamp(16px,1.25rem,24px)/1 Bangers,Impact,cursive;letter-spacing:.03em}
+.estimate-dock-status{max-width:74px;overflow:hidden;text-overflow:ellipsis}
+.estimate-dock-scan{flex:0 0 48px;width:48px;padding:0}
+.estimate-dock-scan svg{width:21px;height:21px;fill:currentColor}
+.estimate-dock-dot{position:absolute;top:3px;right:5px;width:10px;height:10px;border:2px solid #14112e;border-radius:50%;background:#ff4d8d}
+.estimate-dock-dot[hidden]{display:none}
+#estimate-dock.is-open #risk-summary{position:absolute!important;inset:auto auto calc(100% + 10px) 6px!important;display:block!important;width:min(360px,calc(100vw - 36px))!important;max-height:40dvh!important;overflow:auto!important;padding:12px!important;background:var(--paper,#fffdf6)!important;color:var(--ink,#14112e)!important;border:3px solid var(--ink,#14112e)!important;border-radius:24px!important;box-shadow:4px 5px 0 var(--ink,#14112e)!important;transform-origin:bottom left;animation:estimate-card-in .28s cubic-bezier(.2,.8,.2,1) both}
+#risk-summary{display:none}
+.risk-summary-head{gap:6px}
+.risk-summary-head strong{font:clamp(18px,1.375rem,28px)/1 Bangers,Impact,cursive}
+.estimate-dock-close,.estimate-detail-close{flex:0 0 44px;width:44px;height:44px;min-height:44px;border:2px solid var(--ink,#14112e);border-radius:50%;background:var(--white,#fff);color:var(--ink,#14112e);box-shadow:2px 3px 0 var(--ink,#14112e);font:900 26px/1 var(--font-body,Nunito,sans-serif)}
+.estimate-dock-search{display:none;flex:0 0 44px;width:44px;height:44px;min-height:44px;border:2px solid #14112e;border-radius:50%;background:#fff;color:#14112e;box-shadow:2px 3px 0 #14112e;font:900 24px/1 var(--font-body,Nunito,sans-serif)}
+.risk-summary-main{display:grid!important;grid-template-columns:1fr;gap:2px;margin:6px 0}
+.risk-summary-main #risk-value{font:clamp(26px,2rem,40px)/1 Bangers,Impact,cursive}
+.risk-summary-main #risk-window{font:700 clamp(14px,.875rem,22px)/1.4 var(--font-body,Nunito,sans-serif);overflow-wrap:anywhere}
+.estimate-run{width:100%;min-height:48px;padding:9px 12px;background:#ffd93d;color:#14112e;font-size:clamp(16px,1rem,22px)!important}
+.estimate-secondary{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:8px}
+.estimate-details-open{min-height:44px;padding:7px 12px;border:2px solid #14112e;border-radius:18px;background:#fff;color:#14112e;box-shadow:2px 3px 0 #14112e;font:900 clamp(14px,.875rem,22px) var(--font-body,Nunito,sans-serif)}
+.estimate-secondary details{min-height:44px;display:flex;align-items:center}
+.estimate-secondary summary{min-height:44px;display:flex;align-items:center;padding:7px 12px;border:2px solid #14112e;border-radius:18px;background:#fff;color:#14112e;box-shadow:2px 3px 0 #14112e;font-size:clamp(14px,.875rem,22px);font-weight:900;cursor:pointer}
+.estimate-secondary details[open]{display:block;flex-basis:100%}
+.estimate-detail-dialog{position:fixed;inset:0;width:100vw;height:100dvh;max-width:none;max-height:none;margin:0;padding:max(20px,env(safe-area-inset-top)) 20px max(20px,env(safe-area-inset-bottom));overflow:auto;border:0;border-radius:0;background:var(--cream,#fff8e1);color:var(--ink,#14112e);font:700 16px/1.5 var(--font-body,Nunito,sans-serif)}
+.estimate-detail-dialog::backdrop{background:rgba(20,17,46,.55)}
+.estimate-detail-heading{display:flex;align-items:center;justify-content:space-between;gap:12px;max-width:760px;margin:0 auto 16px}
+.estimate-detail-heading h2{margin:0;font:32px/1 Bangers,Impact,cursive}
+.estimate-detail-dialog .estimate-details{max-width:760px;margin:0 auto;padding:16px;border:2px solid #14112e;border-radius:22px;background:#fff}
+.estimate-detail-dialog .estimate-details summary{min-height:44px;font-weight:900}
+#aegis-layer-caption{position:fixed;z-index:1108;left:12px;right:12px;bottom:calc(var(--estimate-dock-bottom,222px) + 66px);max-width:calc(100vw - 24px);min-height:38px;padding:7px 11px;border:2px solid var(--ink,#14112e);border-radius:16px;background:var(--cream,#fff8e1);color:var(--ink,#14112e);box-shadow:2px 3px 0 var(--ink,#14112e);text-align:left;font:800 clamp(12px,.75rem,20px)/1.3 var(--font-body,Nunito,sans-serif);pointer-events:auto}
+#risk-summary #aegis-layer-caption{position:relative;z-index:auto;inset:auto;width:100%;max-width:none;min-height:38px;margin:6px 0 8px;transform:none;box-shadow:2px 3px 0 var(--ink,#14112e)}
+#active-layer-bar[aria-hidden="true"]{position:absolute!important;width:1px!important;height:1px!important;overflow:hidden!important;clip-path:inset(50%)!important;white-space:nowrap!important}
+.leaflet-tile{transition:opacity .2s ease-out}
+.estimate-dock-coach{position:absolute;left:8px;bottom:calc(100% + 10px);transform:translateY(-56px);padding:8px 12px;border:2px solid #14112e;border-radius:16px;background:#ffd93d;color:#14112e;box-shadow:2px 3px 0 #14112e;font:900 13px/1.2 var(--font-body,Nunito,sans-serif);pointer-events:none}
+.estimate-dock-coach::after{content:"";position:absolute;left:22px;bottom:-8px;width:12px;height:12px;transform:rotate(45deg);border-right:2px solid #14112e;border-bottom:2px solid #14112e;background:#ffd93d}
+#estimate-dock.has-new-result{animation:estimate-dock-pulse .48s ease-out 1}
+@keyframes estimate-card-in{from{opacity:0;transform:translateY(8px) scale(.98)}to{opacity:1;transform:translateY(0) scale(1)}}
+@keyframes estimate-dock-pulse{50%{transform:translateY(-4px)}}
+#estimate-dock[data-state="scanning"] .estimate-dock-status::before{content:"";display:inline-block;width:10px;height:10px;margin-right:5px;border:2px solid currentColor;border-right-color:transparent;border-radius:50%;vertical-align:-1px;animation:dock-ring .7s linear infinite}
+@keyframes dock-ring{to{transform:rotate(360deg)}}
+#estimate-dock[data-state="error"] .estimate-dock-status{color:#8e2020}
+.ops-tabs{position:relative;display:flex;gap:4px;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;isolation:isolate;mask-image:linear-gradient(90deg,transparent 0,#000 12px,#000 calc(100% - 12px),transparent);-webkit-mask-image:linear-gradient(90deg,transparent 0,#000 12px,#000 calc(100% - 12px),transparent)}
+.ops-tabs::-webkit-scrollbar,.preset-tags::-webkit-scrollbar{display:none}
+.ops-tabs::before{content:"";position:absolute;z-index:-1;left:0;top:4px;width:var(--active-tab-width,0px);height:44px;transform:translateX(var(--active-tab-x,0));border:3px solid #14112e;border-radius:999px;background:#ffd93d;box-shadow:3px 4px 0 #14112e;transition:transform .28s cubic-bezier(.2,.8,.2,1)}
+.ops-tab{flex:0 0 auto;scroll-snap-align:center;min-width:88px;border:0!important;background:transparent!important;box-shadow:none!important;color:#14112e!important;font-size:clamp(9px,.75rem,20px)!important}
+.ops-tab::before{font:16px/1 system-ui,sans-serif;margin-right:5px}
+.ops-tab[data-tab="monitor"]::before{content:"◉"}.ops-tab[data-tab="respond"]::before{content:"➜"}.ops-tab[data-tab="plan"]::before{content:"◇"}.ops-tab[data-tab="layers"]::before{content:"▧"}.ops-tab[data-tab="community"]::before{content:"◎"}
+.preset-tags{scroll-snap-type:x mandatory;padding:5px 10px 8px;mask-image:linear-gradient(90deg,#000 0,#000 calc(100% - 24px),transparent);-webkit-mask-image:linear-gradient(90deg,#000 0,#000 calc(100% - 24px),transparent)}
+.preset-pill{scroll-snap-align:start}
+.search-container,.search-input-wrapper{border-radius:24px}
+.search-input-wrapper{overflow:visible}
+.search-btn{min-height:44px}
+.ops-heading{position:relative;gap:7px}
+#queued-count{flex:0 1 98px;max-width:98px;min-height:44px;padding:5px 8px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:9px}
+#queued-count::before{content:"● ";font:900 10px/1 system-ui,sans-serif}
+.top-bar::before{content:"";position:absolute;z-index:-1;inset:-3px -4px;border:1px solid rgba(20,17,46,.2);border-radius:20px;background:rgba(255,248,225,.94);pointer-events:none}
+#aegis-more-button{min-width:44px;min-height:44px;padding:5px 9px;border:2px solid #14112e;border-radius:16px;background:#fff;color:#14112e;box-shadow:2px 3px 0 #14112e;font:900 13px var(--font-body,Nunito,sans-serif)}
+.aegis-more-menu{position:absolute;z-index:5;right:0;top:calc(100% + 8px);display:flex;gap:7px;padding:8px;border:2px solid #14112e;border-radius:18px;background:#fff8e1;box-shadow:2px 3px 0 #14112e}
+.aegis-more-menu[hidden]{display:none}
+.aegis-more-menu>*{min-width:44px;min-height:44px}
+.language-note{position:relative;padding:8px 42px 8px 10px;border-radius:14px;background:#fff8e1;overflow-wrap:anywhere}
+.language-note[hidden]{display:none}
+.language-note-dismiss{position:absolute;right:2px;top:2px;width:44px;height:44px;border:0;background:transparent;color:#14112e;font-size:23px}
+.aegis-settings-language-note{min-height:44px;margin-top:8px}
+.aegis-sheet-open #estimate-dock,.aegis-sheet-dragging #estimate-dock{transform:translateY(90px);opacity:0;pointer-events:none}
+.aegis-sheet-open #aegis-layer-caption,.aegis-sheet-dragging #aegis-layer-caption{transform:translateY(90px);opacity:0;pointer-events:none}
+.aegis-sheet-open .fab-hud-toggle,.aegis-sheet-dragging .fab-hud-toggle{transform:translateY(90px);opacity:0;pointer-events:none}
+.aegis-keyboard-focus #estimate-dock,.aegis-keyboard-focus #aegis-layer-caption{visibility:hidden;pointer-events:none}
+#aegis-map-credits{top:calc(env(safe-area-inset-top) + 216px);bottom:auto!important;left:12px;max-width:min(300px,calc(100vw - 24px))}
+.aegis-more-menu button{padding:7px 10px;border:2px solid #14112e;border-radius:14px;background:#fff;color:#14112e;box-shadow:2px 3px 0 #14112e;font:900 13px var(--font-body,Nunito,sans-serif)}
+#risk-summary{pointer-events:auto}
+#aegis-layer-caption{pointer-events:auto}
+.indicator-online,.mode-toggle,.language-picker,.indicator-sector{box-shadow:2px 3px 0 #14112e}
+.indicator-online,.mode-toggle,.language-picker,.indicator-sector,.queue-chip{border-width:2px}
+.leaflet-control-attribution{font-size:10px!important;line-height:1.25!important}
+html[dir="rtl"] #estimate-dock{left:auto;right:12px;transform-origin:bottom right}
+html[dir="rtl"] #estimate-dock.is-open #risk-summary{left:auto!important;right:6px!important;transform-origin:bottom right}
+html[dir="rtl"] #aegis-layer-caption{left:12px;right:12px;text-align:right}
+html[dir="rtl"] #fab-hud-toggle{left:12px;right:auto}
+html[dir="rtl"] #aegis-map-credits{left:auto;right:12px}
+html[dir="rtl"] .leaflet-control-attribution{left:auto!important;right:8px!important;margin-left:0!important;margin-right:8px!important}
+@media(max-width:360px){#estimate-dock{left:7px;width:calc(100vw - 130px)}.estimate-dock-controls{gap:4px}.estimate-dock-toggle{padding-inline:4px;gap:3px}.estimate-dock-label{font-size:clamp(14px,1.1rem,20px)}.estimate-dock-status{max-width:32px}.estimate-dock-toggle svg{width:18px;height:18px;flex-basis:18px}.fab-hud-toggle{max-width:112px;padding:7px 8px!important;font-size:12px!important;white-space:normal}.ops-tab{min-width:80px;font-size:8px}.aegis-more-menu{right:-2px}#aegis-map-credits{left:7px;top:calc(env(safe-area-inset-top) + 190px)}}
+@media(max-width:360px){.estimate-dock-toggle{padding-inline:2px;gap:2px}.estimate-dock-label{font-size:clamp(14px,1rem,16px)}.estimate-dock-status{max-width:36px;font-size:12px!important}.risk-summary-head{display:grid!important;grid-template-columns:minmax(0,1fr) 44px;grid-template-areas:"title close" "badge close";gap:4px}.risk-summary-head strong{grid-area:title;font-size:clamp(16px,1rem,22px)!important}.risk-summary-head #risk-badge{grid-area:badge;justify-self:start;max-width:100%;font-size:10px!important}.risk-summary-head .estimate-dock-close{grid-area:close;align-self:start}.risk-summary-head .estimate-dock-search{display:none!important}}
+@media(max-height:620px){.estimate-dock-coach{display:none}#estimate-dock.is-open #risk-summary{max-height:35dvh!important;padding:8px!important}.aegis-estimate-dock-open #aegis-map-credits{visibility:hidden;pointer-events:none}#aegis-map-credits{top:calc(env(safe-area-inset-top) + 250px)!important;bottom:auto!important;left:auto!important;right:8px!important;width:min(164px,calc(50vw - 12px));max-width:164px;padding:4px 6px;font-size:10px}.estimate-dock-search{display:none!important}.ops-tools.sheet-expanded .ops-page{max-height:calc(60dvh - 80px)}.search-container{top:calc(env(safe-area-inset-top) + 48px)!important}.preset-tags{max-height:38px;overflow-x:auto;overflow-y:hidden}#aegis-layer-caption{top:calc(env(safe-area-inset-top) + 150px);bottom:auto}.aegis-estimate-dock-open #estimate-dock{transform:translateY(100px)}body.aegis-estimate-dock-open #ops-sheet:not(.sheet-expanded):not(.sheet-full){transform:translate3d(0,calc(90dvh - 110px),0);transition:transform .28s cubic-bezier(.2,.8,.2,1)}body.aegis-estimate-dock-open #aegis-map-actions,body.aegis-estimate-dock-open .fab-hud-toggle{visibility:hidden;pointer-events:none}body.aegis-estimate-dock-open .leaflet-control-attribution{top:calc(env(safe-area-inset-top) + 130px)!important}body.aegis-estimate-dock-open #aegis-layer-caption{top:calc(env(safe-area-inset-top) + 130px)!important;bottom:auto!important;left:calc(8px + min(42vw,164px) + 6px)!important;right:8px!important;width:auto!important;max-width:none!important;min-height:38px;padding:2px 4px;font-size:12px!important;line-height:1.1;z-index:1111!important}#estimate-dock.is-open #risk-summary .estimate-run{position:sticky;bottom:0;z-index:2}#estimate-dock.is-open #risk-summary .risk-summary-main #risk-window{font-size:clamp(14px,.5rem,16px)!important;line-height:1.2}}
+@media(max-width:600px){.leaflet-control-attribution{position:fixed!important;top:calc(env(safe-area-inset-top) + 250px);left:8px!important;right:auto!important;bottom:auto!important;margin:0!important;z-index:1101!important}body.aegis-estimate-dock-open .preset-tags{display:none!important}body.aegis-estimate-dock-open .leaflet-control-attribution{top:calc(env(safe-area-inset-top) + 130px)!important;z-index:1111!important}}
+@media(max-width:360px) and (max-height:620px){#aegis-map-credits{width:148px;height:44px;padding:0;font-size:0;display:flex;align-items:center}#aegis-map-credits>a{display:none}#aegis-map-credits .aegis-credits-open{width:100%;min-height:44px;padding:4px;border:0;background:transparent;color:#14112e;font:800 10px/1.2 system-ui,sans-serif;text-align:center}}
+.aegis-estimate-dock-open .search-container{z-index:1200!important}
+#estimate-dock.is-open #risk-summary{scrollbar-width:none}
+#estimate-dock.is-open #risk-summary::-webkit-scrollbar{display:none}
+@media(min-width:769px){#estimate-dock{left:18px;bottom:16px}.ops-tabs::before{top:3px}.ops-tab{min-width:96px}}
+@media(prefers-reduced-motion:reduce){#estimate-dock,.ops-tabs::before,#aegis-layer-caption{transition:none!important;animation:none!important}.estimate-dock-coach{animation:none!important}#estimate-dock[data-state="scanning"] .estimate-dock-status::before{animation:none!important}}
+@media(prefers-reduced-motion:reduce){body.aegis-estimate-dock-open #ops-sheet:not(.sheet-expanded):not(.sheet-full){transition:none!important}}
+@media(prefers-reduced-transparency:reduce){#aegis-layer-caption,.aegis-more-menu,.estimate-detail-dialog{background:#fff8e1!important}}
+[data-text-size="largest"] #estimate-dock{width:min(220px,calc(100vw - 130px))}
+.top-bar #aegis-emergency-open{position:static;inset:auto;z-index:auto;width:48px;min-width:48px;max-width:48px;height:48px;min-height:48px;padding:4px;border:2px solid #14112e;border-radius:16px;background:#ff4d4d;color:#14112e;box-shadow:2px 3px 0 #14112e;font:900 12px/1 var(--font-body,Nunito,sans-serif)}
+@media(max-width:768px){.top-bar{grid-template-columns:minmax(0,1fr) auto auto 48px!important}.top-bar #aegis-emergency-open{justify-self:end}}
+@media(max-width:360px){.top-bar{grid-template-columns:minmax(0,1fr) auto 64px 48px!important;gap:4px}.top-bar .language-picker{box-sizing:border-box;width:64px;min-width:64px;max-width:64px;padding:0 12px 0 3px!important;font-size:8px!important}.top-bar .indicator-online{padding-inline:4px}.top-bar .mode-toggle{position:static!important;inset:auto!important;padding-inline:2px!important;font-size:8px!important}}
+[data-theme="dark"] #estimate-dock .estimate-dock-toggle,[data-theme="dark"] #estimate-dock .estimate-dock-scan,[data-theme="dark"] #estimate-dock .estimate-dock-close,[data-theme="dark"] #aegis-layer-caption,[data-theme="dark"] .estimate-detail-dialog,[data-theme="dark"] .aegis-more-menu,[data-theme="dark"] .estimate-detail-dialog .estimate-details{background:#211d49;color:#fff8e1;border-color:#fff8e1}
+[data-theme="dark"] .estimate-dock-toggle,[data-theme="dark"] .estimate-dock-scan,[data-theme="dark"] .estimate-dock-close,[data-theme="dark"] .estimate-details-open,[data-theme="dark"] .estimate-secondary summary,[data-theme="dark"] .estimate-dock-search,[data-theme="dark"] .estimate-detail-close{color:#fff8e1;border-color:#fff8e1}
+[data-theme="dark"] .estimate-details-open,[data-theme="dark"] .estimate-secondary summary,[data-theme="dark"] .estimate-dock-search,[data-theme="dark"] .estimate-detail-close{background:#29254d}
+html[lang^="hi"] .estimate-dock-label,html[lang^="hi"] .estimate-detail-heading h2{font-family:var(--font-body),system-ui,sans-serif;font-weight:900;letter-spacing:0}
+
+/* Responsive application frame and shared stacking order. */
+:root {
+  --aegis-z-map: 0;
+  --aegis-z-map-controls: 10;
+  --aegis-z-panels: 20;
+  --aegis-z-overlays: 30;
+  --aegis-z-popups: 40;
+  --aegis-z-toasts: 50;
+  --aegis-z-modals: 60;
+  --aegis-left-rail: 380px;
+  --aegis-right-rail: 400px;
+  --aegis-wide-gutter: max(0px, calc((100vw - 1920px) / 2));
+  --aegis-safe-top: env(safe-area-inset-top, 0px);
+}
+
+@media (min-width: 1024px) {
+  #map {
+    position: fixed !important;
+    top: 0 !important;
+    right: calc(var(--aegis-wide-gutter) + var(--aegis-right-rail) + 12px) !important;
+    bottom: 0 !important;
+    left: calc(var(--aegis-wide-gutter) + var(--aegis-left-rail)) !important;
+    width: auto !important;
+    height: 100dvh !important;
+    z-index: var(--aegis-z-map) !important;
+  }
+
+  .top-bar {
+    top: 12px !important;
+    left: calc(var(--aegis-wide-gutter) + var(--aegis-left-rail) + 12px) !important;
+    right: calc(var(--aegis-wide-gutter) + var(--aegis-right-rail) + 12px) !important;
+    width: auto !important;
+    max-width: none !important;
+    justify-content: center;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    scrollbar-width: none;
+    z-index: var(--aegis-z-overlays) !important;
+  }
+
+  .top-bar::-webkit-scrollbar {
+    display: none;
+  }
+
+  .top-bar::before {
+    display: none !important;
+  }
+
+  .search-container {
+    top: 78px !important;
+    left: calc(var(--aegis-wide-gutter) + var(--aegis-left-rail) + (100vw - 2 * var(--aegis-wide-gutter) - var(--aegis-left-rail) - var(--aegis-right-rail)) / 2) !important;
+    right: auto !important;
+    width: min(560px, calc(100vw - 2 * var(--aegis-wide-gutter) - var(--aegis-left-rail) - var(--aegis-right-rail) - 24px)) !important;
+    max-width: 560px !important;
+    transform: translateX(-50%);
+    z-index: var(--aegis-z-overlays) !important;
+  }
+
+  .search-input-wrapper {
+    display: flex;
+    width: 100%;
+    min-width: 0;
+    align-items: center;
+  }
+
+  .search-input {
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+
+  .search-btn,
+  .aegis-search-clear {
+    flex: 0 0 auto;
+  }
+
+  .preset-tags {
+    width: 100%;
+    min-width: 0;
+    overflow-x: auto;
+    overflow-y: hidden;
+    overscroll-behavior-x: contain;
+    scrollbar-width: none;
+    scroll-snap-type: x mandatory;
+  }
+
+  .comic-panel {
+    position: fixed !important;
+    top: 12px !important;
+    right: auto !important;
+    bottom: auto !important;
+    left: calc(var(--aegis-wide-gutter) + 12px) !important;
+    width: var(--aegis-left-rail) !important;
+    max-width: calc(var(--aegis-left-rail) - 24px) !important;
+    height: max-content !important;
+    max-height: calc(100dvh - 24px) !important;
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
+    z-index: var(--aegis-z-panels) !important;
+  }
+
+  #estimate-dock {
+    left: calc(var(--aegis-wide-gutter) + 16px) !important;
+    right: auto !important;
+    bottom: 16px !important;
+    z-index: var(--aegis-z-overlays) !important;
+  }
+
+  .ops-tools,
+  #ops-sheet {
+    position: fixed !important;
+    top: 12px !important;
+    right: calc(var(--aegis-wide-gutter) + 12px) !important;
+    bottom: 12px !important;
+    left: auto !important;
+    width: var(--aegis-right-rail) !important;
+    height: auto !important;
+    min-height: 0 !important;
+    max-height: none !important;
+    padding: 12px !important;
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
+    border: var(--comic-line, 3px solid #14112e) !important;
+    border-radius: 24px !important;
+    box-shadow: var(--comic-shadow, 4px 5px 0 #14112e) !important;
+    transform: none !important;
+    transition: none !important;
+    z-index: var(--aegis-z-panels) !important;
+  }
+
+  #ops-sheet .sheet-handle,
+  #aegis-sheet-collapse {
+    display: none !important;
+  }
+
+  #aegis-panel-toggle {
+    display: inline-flex;
+    min-width: 44px;
+    min-height: 44px;
+    align-items: center;
+    justify-content: center;
+    padding: 5px 9px;
+    border: 2px solid var(--ink);
+    border-radius: 15px;
+    background: var(--yellow);
+    color: var(--ink);
+    box-shadow: 2px 3px 0 var(--ink);
+    font: 900 11px/1.1 var(--font-body, Nunito, sans-serif);
+  }
+
+  #ops-sheet.is-collapsed {
+    width: 64px !important;
+    min-height: 64px !important;
+    padding: 8px !important;
+    overflow: hidden !important;
+  }
+
+  #ops-sheet.is-collapsed .ops-heading {
+    min-height: 44px;
+  }
+
+  #ops-sheet.is-collapsed .ops-heading > :not(#aegis-panel-toggle),
+  #ops-sheet.is-collapsed .ops-tabs,
+  #ops-sheet.is-collapsed .language-note,
+  #ops-sheet.is-collapsed .ops-page {
+    display: none !important;
+  }
+
+  #ops-sheet.is-collapsed #aegis-panel-toggle {
+    width: 44px;
+    padding-inline: 3px;
+  }
+
+  #ops-sheet .ops-page,
+  #ops-sheet .ops-page.active {
+    max-height: none !important;
+    overflow: visible !important;
+  }
+
+  #ops-sheet .ops-actions {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    overflow: visible;
+  }
+
+  .indicator-sector {
+    max-width: min(300px, 100%);
+    white-space: normal;
+    overflow-wrap: anywhere;
+  }
+
+  .data-label {
+    white-space: normal;
+    overflow-wrap: anywhere;
+  }
+
+  #aegis-map-credits {
+    left: calc(var(--aegis-wide-gutter) + var(--aegis-left-rail) + 12px) !important;
+    top: auto !important;
+    bottom: 8px !important;
+    width: max-content;
+    height: auto !important;
+    max-width: min(320px, calc(100vw - var(--aegis-wide-gutter) - var(--aegis-left-rail) - var(--aegis-right-rail) - 24px));
+    z-index: var(--aegis-z-overlays) !important;
+  }
+
+  #aegis-layer-caption {
+    position: fixed !important;
+    top: auto !important;
+    right: auto !important;
+    bottom: 110px !important;
+    left: calc(var(--aegis-wide-gutter) + var(--aegis-left-rail) + 12px) !important;
+    width: max-content !important;
+    max-width: min(580px, calc(100vw - 2 * var(--aegis-wide-gutter) - var(--aegis-left-rail) - var(--aegis-right-rail) - 24px)) !important;
+    z-index: var(--aegis-z-overlays) !important;
+  }
+
+  #aegis-map-actions {
+    top: 112px !important;
+    right: calc(var(--aegis-wide-gutter) + var(--aegis-right-rail) + 12px) !important;
+    bottom: auto !important;
+    z-index: var(--aegis-z-map-controls) !important;
+  }
+
+  .leaflet-top.leaflet-left {
+    top: 12px;
+    right: 12px;
+    left: auto;
+  }
+
+  .leaflet-control-zoom {
+    position: absolute !important;
+    top: 12px !important;
+    right: 12px !important;
+    left: auto !important;
+    margin: 0 !important;
+  }
+
+  .leaflet-control-scale {
+    margin-bottom: 38px !important;
+  }
+
+  .legend-panel {
+    position: fixed !important;
+    top: auto !important;
+    right: calc(var(--aegis-wide-gutter) + var(--aegis-right-rail) + 12px) !important;
+    bottom: 108px !important;
+    left: auto !important;
+    max-width: min(260px, calc(100vw - 2 * var(--aegis-wide-gutter) - var(--aegis-left-rail) - var(--aegis-right-rail) - 24px));
+    z-index: var(--aegis-z-overlays) !important;
+  }
+
+  .leaflet-popup-pane {
+    z-index: var(--aegis-z-popups) !important;
+  }
+
+  .leaflet-popup-content-wrapper {
+    max-height: min(60dvh, 520px);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+  }
+
+  .leaflet-popup-content {
+    max-width: min(260px, calc(100vw - 48px));
+    overflow-wrap: anywhere;
+  }
+
+  .leaflet-control-zoom,
+  .leaflet-control-scale,
+  .leaflet-control-attribution {
+    z-index: var(--aegis-z-map-controls) !important;
+  }
+
+  .toast,
+  .aegis-update-toast,
+  #aegis-offline-banner {
+    z-index: var(--aegis-z-toasts) !important;
+  }
+
+  .dialog-backdrop,
+  .aegis-overlay,
+  dialog {
+    z-index: var(--aegis-z-modals) !important;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1023px) {
+  #map {
+    z-index: var(--aegis-z-map) !important;
+  }
+
+  .top-bar {
+    top: 10px !important;
+    left: 12px !important;
+    right: 12px !important;
+    width: auto !important;
+    flex-wrap: wrap;
+    z-index: var(--aegis-z-overlays) !important;
+  }
+
+  .search-container {
+    top: 78px !important;
+    left: 50% !important;
+    right: auto !important;
+    width: min(560px, calc(100vw - 32px)) !important;
+    transform: translateX(-50%);
+    z-index: var(--aegis-z-overlays) !important;
+  }
+
+  .comic-panel {
+    display: flex !important;
+    top: 210px !important;
+    right: auto !important;
+    bottom: calc(210px + env(safe-area-inset-bottom)) !important;
+    left: 12px !important;
+    width: min(320px, calc(100vw - 24px)) !important;
+    max-height: none !important;
+    overflow-y: auto !important;
+    z-index: var(--aegis-z-panels) !important;
+  }
+
+  #estimate-dock {
+    left: 344px !important;
+    bottom: calc(218px + env(safe-area-inset-bottom)) !important;
+  }
+
+  #aegis-layer-caption {
+    left: 344px !important;
+    right: auto !important;
+    bottom: calc(218px + 72px + env(safe-area-inset-bottom)) !important;
+    width: max-content !important;
+    max-width: min(400px, calc(100vw - 368px)) !important;
+  }
+
+  #aegis-map-credits {
+    top: 430px !important;
+    right: 12px !important;
+    bottom: auto !important;
+    left: auto !important;
+    width: max-content !important;
+    height: auto !important;
+    max-width: min(300px, calc(100vw - 24px)) !important;
+  }
+
+  .legend-panel {
+    bottom: calc(218px + env(safe-area-inset-bottom)) !important;
+    left: auto !important;
+    right: 12px !important;
+    max-width: min(220px, calc(100vw - 24px));
+  }
+
+  @media (min-width: 1024px) and (max-width: 1199px) {
+    .legend-panel {
+      bottom: 230px !important;
+    }
+  }
+
+  @media (min-width: 768px) and (max-width: 1023px) and (max-height: 500px) {
+    #map {
+      right: 312px !important;
+      left: 0 !important;
+      width: auto !important;
+    }
+
+    .top-bar {
+      right: auto !important;
+      left: 12px !important;
+      width: min(508px, calc(100vw - 348px)) !important;
+      height: 44px;
+      flex-wrap: nowrap !important;
+      overflow-x: auto !important;
+      scrollbar-width: none;
+    }
+
+    .search-container {
+      top: 60px !important;
+      left: 12px !important;
+      right: auto !important;
+      width: min(260px, calc(100vw - 360px)) !important;
+      transform: none !important;
+    }
+
+    .comic-panel {
+      top: 194px !important;
+      right: auto !important;
+      bottom: 90px !important;
+      left: 12px !important;
+      width: 260px !important;
+      max-width: 260px !important;
+      height: auto !important;
+      max-height: none !important;
+      overflow-y: auto !important;
+    }
+
+    #ops-sheet.ops-tools {
+      top: 12px !important;
+      right: 12px !important;
+      bottom: 12px !important;
+      left: auto !important;
+      width: 300px !important;
+      height: auto !important;
+      max-height: none !important;
+      overflow-y: auto !important;
+      transform: none !important;
+      border-radius: 24px !important;
+    }
+
+    #ops-sheet .sheet-handle {
+      display: none !important;
+    }
+
+    #ops-sheet .ops-page,
+    #ops-sheet .ops-page.active {
+      max-height: none !important;
+      overflow: visible !important;
+    }
+
+    #aegis-panel-toggle {
+      display: inline-flex !important;
+    }
+
+    #aegis-map-actions {
+      top: 60px !important;
+      right: 324px !important;
+      bottom: auto !important;
+    }
+
+    .leaflet-top.leaflet-left {
+      top: 52px;
+      right: auto;
+      left: 284px;
+    }
+
+    .leaflet-control-zoom {
+      position: absolute !important;
+      top: 12px !important;
+      right: auto !important;
+      left: 0 !important;
+      margin: 0 !important;
+    }
+
+    .leaflet-control-scale {
+      margin-bottom: 38px !important;
+    }
+
+    #aegis-map-credits {
+      top: 216px !important;
+      right: 12px !important;
+      bottom: auto !important;
+      left: 284px !important;
+      width: min(236px, calc(100vw - 620px)) !important;
+      height: 47px !important;
+      max-width: 236px !important;
+    }
+
+    #aegis-layer-caption {
+      top: 164px !important;
+      right: 12px !important;
+      bottom: auto !important;
+      left: 284px !important;
+      width: min(236px, calc(100vw - 620px)) !important;
+      max-width: 236px !important;
+    }
+
+    #estimate-dock {
+      left: 12px !important;
+      bottom: 12px !important;
+    }
+
+    #fab-hud-toggle {
+      display: block !important;
+      top: 266px !important;
+      right: auto !important;
+      bottom: auto !important;
+      left: 284px !important;
+      width: 160px;
+      min-height: 44px;
+    }
+
+    .legend-panel {
+      display: none !important;
+    }
+  }
+
+  .ops-tools,
+  #ops-sheet {
+    top: var(--aegis-sheet-top, 0px) !important;
+    bottom: auto !important;
+    height: var(--aegis-sheet-height, 100dvh) !important;
+    max-height: none !important;
+    left: 50% !important;
+    right: auto !important;
+    width: min(480px, calc(100vw - 24px)) !important;
+    overflow: hidden !important;
+    transform: translate3d(-50%, var(--aegis-sheet-y, 0px), 0);
+    z-index: var(--aegis-z-panels) !important;
+  }
+
+  #ops-sheet .sheet-handle {
+    display: block !important;
+    width: 72px;
+    min-height: 44px;
+    height: 44px;
+    touch-action: none;
+  }
+
+  #ops-sheet .ops-page,
+  #ops-sheet .ops-page.active {
+    max-height: none !important;
+    overflow: hidden !important;
+    touch-action: pan-y;
+  }
+
+  #ops-sheet.sheet-full .ops-page,
+  #ops-sheet[data-sheet-state="full"] .ops-page {
+    max-height: calc(100% - 150px) !important;
+    overflow-y: auto !important;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  #aegis-panel-toggle {
+    display: none !important;
+  }
+
+  .leaflet-popup-content-wrapper {
+    max-height: min(58dvh, 520px);
+    overflow-y: auto;
+  }
+}
+
+.ops-page[data-page="layers"] .legend-panel {
+  position: static !important;
+  display: block !important;
+  width: auto !important;
+  max-width: none !important;
+  max-height: none !important;
+  margin: 12px 0 !important;
+  transform: none !important;
+}
+
+@media (max-width: 767px) {
+  #map {
+    z-index: var(--aegis-z-map) !important;
+  }
+
+  .ops-tools,
+  #ops-sheet {
+    top: var(--aegis-sheet-top, 0px) !important;
+    right: 0 !important;
+    bottom: auto !important;
+    left: 0 !important;
+    width: 100% !important;
+    height: var(--aegis-sheet-height, 100dvh) !important;
+    max-height: none !important;
+    overflow: hidden !important;
+    transform: translate3d(0, var(--aegis-sheet-y, 0px), 0);
+    transition: transform 280ms cubic-bezier(.2,.8,.2,1);
+    touch-action: pan-y;
+    z-index: var(--aegis-z-panels) !important;
+  }
+
+  #ops-sheet .sheet-handle {
+    display: block !important;
+    width: 72px;
+    min-height: 44px;
+    height: 44px;
+    touch-action: none;
+    cursor: grab;
+  }
+
+  #ops-sheet .ops-heading {
+    touch-action: none;
+  }
+
+  #aegis-panel-toggle {
+    display: none !important;
+  }
+
+  .legend-panel {
+    display: none;
+  }
+
+  #ops-sheet .ops-page,
+  #ops-sheet .ops-page.active {
+    max-height: none !important;
+    overflow: hidden !important;
+    overscroll-behavior: contain;
+    touch-action: pan-y;
+  }
+
+  #ops-sheet.sheet-full .ops-page,
+  #ops-sheet[data-sheet-state="full"] .ops-page {
+    max-height: calc(100% - 150px) !important;
+    overflow-y: auto !important;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  #ops-sheet.sheet-dragging {
+    transition: none !important;
+    will-change: transform;
+  }
+
+  #ops-sheet.sheet-settling {
+    transition: transform 280ms cubic-bezier(.2,.8,.2,1);
+  }
+
+  #aegis-sheet-collapse {
+    display: none;
+    min-width: 44px;
+    min-height: 44px;
+    padding: 5px 10px;
+    border: 2px solid var(--ink);
+    border-radius: 15px;
+    background: var(--yellow);
+    color: var(--ink);
+    box-shadow: 2px 3px 0 var(--ink);
+    font: 900 12px/1.1 var(--font-body, Nunito, sans-serif);
+  }
+
+  #ops-sheet.sheet-full #aegis-sheet-collapse,
+  #ops-sheet[data-sheet-state="full"] #aegis-sheet-collapse {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+}
+
+#ops-sheet.aegis-sheet-initializing {
+  transition: none !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #ops-sheet,
+  #ops-sheet.sheet-settling {
+    transition: none !important;
+  }
+
+  .aegis-simulation-note {
+    margin: 4px 2px 8px;
+    padding: 6px 8px;
+    border: 2px dashed var(--ink);
+    border-radius: 12px;
+    background: var(--cream);
+    color: var(--ink);
+    font: 800 12px/1.35 var(--font-body, Nunito, sans-serif);
+  }
+
+  .leaflet-popup-content-wrapper {
+    max-height: min(60dvh, 520px);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+  }
+
+  .leaflet-popup-content {
+    max-width: min(260px, calc(100vw - 48px));
+    overflow-wrap: anywhere;
+  }
+}
